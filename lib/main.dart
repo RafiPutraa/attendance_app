@@ -36,12 +36,25 @@ class AttendanceApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
+          scaffoldBackgroundColor: const Color(0xFF0F172A),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF6366F1),
+            seedColor: const Color(0xFF0D9488),
             brightness: Brightness.dark,
+            surface: const Color(0xFF1E293B),
+            primary: const Color(0xFF0D9488),
+            secondary: const Color(0xFF334155),
           ),
           textTheme: GoogleFonts.plusJakartaSansTextTheme(
             Theme.of(context).textTheme,
+          ).apply(
+            bodyColor: Colors.white,
+            displayColor: Colors.white,
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
           ),
         ),
         home: BlocBuilder<AuthCubit, AuthState>(

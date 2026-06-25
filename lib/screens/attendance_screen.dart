@@ -17,54 +17,50 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: const Text(
-          'Attendance',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: BlocListener<AttendanceCubit, AttendanceState>(
         listener: (context, state) {
           if (state is AttendanceSuccess) {
             _showResultDialog(
               context,
               success: true,
-              message: 'Check-in Successful!',
-              details: 'Your attendance has been recorded successfully.',
+              message: 'Success',
+              details: 'Attendance recorded successfully.',
             );
           } else if (state is AttendanceFailure) {
             _showResultDialog(
               context,
               success: false,
-              message: 'Check-in Rejected',
+              message: 'Rejected',
               details: state.message,
             );
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildInfoCard(),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               const Text(
-                'Select Destination',
+                'Attendance',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white70,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1,
                 ),
               ),
-              const SizedBox(height: 12),
-              _buildLocationSelector(),
+              const Text(
+                'Please select your current work location.',
+                style: TextStyle(color: Colors.white38, fontSize: 14),
+              ),
+              const SizedBox(height: 48),
+              _buildLocationDropdown(colorScheme),
               const Spacer(),
-              _buildAttendanceButton(),
-              const SizedBox(height: 80),
+              Center(child: _buildMainAction(colorScheme)),
+              const Spacer(),
             ],
           ),
         ),
@@ -72,84 +68,35 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  Widget _buildInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.secondary,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.info_outline, color: Colors.white, size: 30),
-          const SizedBox(height: 15),
-          const Text(
-            'GPS Verification',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Ensure you are within 50 meters of the set location to pass verification.',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.9),
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    ).animate().fadeIn().scale();
-  }
-
-  Widget _buildLocationSelector() {
+  Widget _buildLocationDropdown(ColorScheme colorScheme) {
     return BlocBuilder<MasterLocationCubit, MasterLocationState>(
       builder: (context, state) {
-        if (state.locations.isEmpty) {
-          return const Text('No master locations found. Add one first.');
-        }
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-            ),
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<LocationModel>(
               isExpanded: true,
               hint: const Text(
-                'Choose a location',
-                style: TextStyle(color: Colors.white60),
+                'Target Location',
+                style: TextStyle(color: Colors.white38),
               ),
               value: _selectedLocation,
-              dropdownColor: Theme.of(context).colorScheme.surface,
+              dropdownColor: colorScheme.surface,
+              icon: const Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.white24,
+              ),
               items: state.locations.map((loc) {
                 return DropdownMenuItem(
                   value: loc,
                   child: Text(
                     loc.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 );
               }).toList(),
@@ -161,45 +108,75 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  Widget _buildAttendanceButton() {
+  Widget _buildMainAction(ColorScheme colorScheme) {
     return BlocBuilder<AttendanceCubit, AttendanceState>(
       builder: (context, state) {
         final isLoading = state is AttendanceLoading;
-        return ElevatedButton(
-          onPressed: (_selectedLocation == null || isLoading)
-              ? null
-              : () => context.read<AttendanceCubit>().submitAttendance(
-                  _selectedLocation!,
+        return GestureDetector(
+              onTap: (_selectedLocation == null || isLoading)
+                  ? null
+                  : () => context.read<AttendanceCubit>().submitAttendance(
+                      _selectedLocation!,
+                    ),
+              child: AnimatedContainer(
+                duration: 300.ms,
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: _selectedLocation == null
+                      ? colorScheme.surface
+                      : colorScheme.primary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: _selectedLocation == null
+                        ? Colors.white10
+                        : colorScheme.primary.withOpacity(0.5),
+                    width: 2,
+                  ),
+                  boxShadow: _selectedLocation == null
+                      ? []
+                      : [
+                          BoxShadow(
+                            color: colorScheme.primary.withOpacity(0.2),
+                            blurRadius: 40,
+                            spreadRadius: 5,
+                          ),
+                        ],
                 ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            elevation: 8,
-            shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
-          ),
-          child: isLoading
-              ? const CircularProgressIndicator(color: Colors.white)
-              : const Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.fingerprint, size: 28),
-                    SizedBox(width: 12),
-                    Text(
-                      'Punch Attendance',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    if (isLoading)
+                      const CircularProgressIndicator(strokeWidth: 2)
+                    else ...[
+                      Icon(
+                        Icons.fingerprint_rounded,
+                        size: 80,
+                        color: _selectedLocation == null
+                            ? Colors.white10
+                            : colorScheme.primary,
                       ),
-                    ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'PUNCH IN',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2,
+                          fontSize: 12,
+                          color: _selectedLocation == null
+                              ? Colors.white10
+                              : colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-        );
+              ),
+            )
+            .animate(target: _selectedLocation != null ? 1 : 0)
+            .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1));
       },
-    ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.5, end: 0);
+    );
   }
 
   void _showResultDialog(
@@ -211,47 +188,58 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              success ? Icons.check_circle : Icons.cancel,
-              color: success ? Colors.green : Colors.red,
-              size: 80,
-            ).animate().scale(duration: 400.ms),
             const SizedBox(height: 20),
-            Text(
-              message,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: (success ? Colors.green : Colors.redAccent).withOpacity(
+                  0.1,
+                ),
+                shape: BoxShape.circle,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              details,
-              style: const TextStyle(fontSize: 16, color: Colors.white70),
-              textAlign: TextAlign.center,
+              child: Icon(
+                success ? Icons.check_rounded : Icons.close_rounded,
+                color: success ? Colors.green : Colors.redAccent,
+                size: 40,
+              ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                context.read<AttendanceCubit>().reset();
-              },
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+            Text(
+              message,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              details,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white38),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.read<AttendanceCubit>().reset();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.primary.withOpacity(0.05),
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 12,
+                child: const Text(
+                  'DISMISS',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              child: const Text('OK'),
             ),
           ],
         ),

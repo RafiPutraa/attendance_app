@@ -15,192 +15,175 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   UserRole _selectedRole = UserRole.user;
 
+  void _showPremiumSnackBar(String message, bool isError) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              isError ? Icons.error_outline : Icons.check_circle_outline,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: isError
+            ? Colors.redAccent.withOpacity(0.9)
+            : const Color(0xFF0D9488),
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 10,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorScheme.primary,
-              colorScheme.secondary,
-              colorScheme.surface,
-            ],
-            stops: const [0.0, 0.2, 0.6],
+      body: Stack(
+        children: [
+          Positioned(
+            top: -100,
+            right: -50,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colorScheme.primary.withOpacity(0.05),
+              ),
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(32.0),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.fingerprint, size: 100, color: Colors.white)
-                      .animate()
-                      .scale(duration: 600.ms, curve: Curves.bounceOut)
-                      .shimmer(delay: 1.seconds),
-                  const SizedBox(height: 12),
                   const Text(
-                    'GeoAttendance',
-                    textAlign: TextAlign.center,
+                    'Welcome\nBack.',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      height: 1.1,
+                      letterSpacing: -1.5,
                     ),
-                  ).animate().fadeIn(delay: 300.ms),
-                  const SizedBox(height: 48),
+                  ).animate().fadeIn(duration: 800.ms).slideX(begin: -0.2),
+                  const SizedBox(height: 12),
                   Container(
-                    padding: const EdgeInsets.all(24),
+                    width: 60,
+                    height: 6,
                     decoration: BoxDecoration(
-                      color: colorScheme.surface.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
+                      color: colorScheme.primary,
+                      borderRadius: BorderRadius.circular(3),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        TextField(
-                          controller: _usernameController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: 'Username',
-                            labelStyle: const TextStyle(color: Colors.white70),
-                            prefixIcon: const Icon(Icons.person_outline, color: Colors.white70),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: colorScheme.primary, width: 2),
-                            ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: true,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: const TextStyle(color: Colors.white70),
-                            prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.white24),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: colorScheme.primary, width: 2),
-                            ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Login as:',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _RoleChip(
-                                label: 'User',
-                                icon: Icons.person,
-                                isSelected: _selectedRole == UserRole.user,
-                                onTap: () => setState(
-                                  () => _selectedRole = UserRole.user,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: _RoleChip(
-                                label: 'Admin',
-                                icon: Icons.admin_panel_settings,
-                                isSelected: _selectedRole == UserRole.admin,
-                                onTap: () => setState(
-                                  () => _selectedRole = UserRole.admin,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_usernameController.text.isNotEmpty &&
-                                _passwordController.text.isNotEmpty) {
-                              context.read<AuthCubit>().login(
-                                _usernameController.text,
-                                _passwordController.text,
-                                _selectedRole,
-                              );
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Please enter username and password',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: colorScheme.primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            elevation: 5,
-                          ),
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+                  ).animate().fadeIn(delay: 400.ms).scaleX(),
+                  const SizedBox(height: 60),
+                  TextField(
+                    controller: _usernameController,
+                    style: const TextStyle(fontSize: 18),
+                    decoration: InputDecoration(
+                      hintText: 'Username',
+                      prefixIcon: const Icon(Icons.alternate_email, size: 20),
+                      filled: true,
+                      fillColor: colorScheme.surface.withOpacity(0.5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 20),
                     ),
-                  ).animate().slideY(
-                    begin: 0.2,
-                    end: 0,
-                    duration: 800.ms,
-                    curve: Curves.easeOutQuart,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    style: const TextStyle(fontSize: 18),
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      prefixIcon: const Icon(Icons.key_outlined, size: 20),
+                      filled: true,
+                      fillColor: colorScheme.surface.withOpacity(0.5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Row(
+                    children: [
+                      _RoleChip(
+                        label: 'User',
+                        isSelected: _selectedRole == UserRole.user,
+                        onTap: () =>
+                            setState(() => _selectedRole = UserRole.user),
+                      ),
+                      const SizedBox(width: 12),
+                      _RoleChip(
+                        label: 'Admin',
+                        isSelected: _selectedRole == UserRole.admin,
+                        onTap: () =>
+                            setState(() => _selectedRole = UserRole.admin),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 64,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_usernameController.text.isNotEmpty &&
+                            _passwordController.text.isNotEmpty) {
+                          context.read<AuthCubit>().login(
+                            _usernameController.text,
+                            _passwordController.text,
+                            _selectedRole,
+                          );
+                        } else {
+                          _showPremiumSnackBar(
+                            'Please fill in all fields',
+                            true,
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -208,13 +191,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
 class _RoleChip extends StatelessWidget {
   final String label;
-  final IconData icon;
   final bool isSelected;
   final VoidCallback onTap;
 
   const _RoleChip({
     required this.label,
-    required this.icon,
     required this.isSelected,
     required this.onTap,
   });
@@ -225,36 +206,25 @@ class _RoleChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: 200.ms,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        duration: 300.ms,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? colorScheme.primary : colorScheme.surface,
-          borderRadius: BorderRadius.circular(15),
+          color: isSelected ? colorScheme.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
           border: Border.all(
             color: isSelected
                 ? colorScheme.primary
-                : colorScheme.outline.withOpacity(0.3),
+                : colorScheme.onSurface.withOpacity(0.1),
           ),
         ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isSelected
-                  ? Colors.white
-                  : colorScheme.onSurface.withOpacity(0.6),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected
-                    ? Colors.white
-                    : colorScheme.onSurface.withOpacity(0.6),
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ],
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : colorScheme.onSurface.withOpacity(0.5),
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
