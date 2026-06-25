@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:uuid/uuid.dart';
 import '../blocs/master_location_cubit.dart';
+import '../blocs/auth_cubit.dart';
 import '../models/location_model.dart';
 import '../services/location_service.dart';
 
@@ -162,17 +163,21 @@ class MasterLocationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text(
-          'Location Master',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        title: const Text('Location Master', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(
-            onPressed: () => _showAddLocationDialog(context),
-            icon: const Icon(Icons.add_circle, size: 30),
-            color: Theme.of(context).colorScheme.primary,
+          BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              if (state.role == UserRole.admin) {
+                return IconButton(
+                  onPressed: () => _showAddLocationDialog(context),
+                  icon: const Icon(Icons.add_circle, size: 30),
+                  color: Theme.of(context).colorScheme.primary,
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
           const SizedBox(width: 10),
         ],
@@ -250,14 +255,16 @@ class MasterLocationScreen extends StatelessWidget {
                       ).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.delete_outline,
-                      color: Colors.redAccent,
-                    ),
-                    onPressed: () => context
-                        .read<MasterLocationCubit>()
-                        .deleteLocation(loc.id),
+                  trailing: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, authState) {
+                      if (authState.role == UserRole.admin) {
+                        return IconButton(
+                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                          onPressed: () => context.read<MasterLocationCubit>().deleteLocation(loc.id),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
               ).animate().fadeIn(delay: (index * 100).ms).slideX();

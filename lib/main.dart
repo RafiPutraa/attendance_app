@@ -8,6 +8,9 @@ import 'blocs/attendance_cubit.dart';
 import 'services/location_service.dart';
 import 'screens/home_screen.dart';
 
+import 'blocs/auth_cubit.dart';
+import 'screens/login_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -24,6 +27,7 @@ class AttendanceApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => MasterLocationCubit()..init()),
         BlocProvider(create: (context) => AttendanceCubit(LocationService())),
       ],
@@ -40,7 +44,14 @@ class AttendanceApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
         ),
-        home: const HomeScreen(),
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state.isAuthenticated) {
+              return const HomeScreen();
+            }
+            return const LoginScreen();
+          },
+        ),
       ),
     );
   }

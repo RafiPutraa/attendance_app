@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/auth_cubit.dart';
 import 'master_location_screen.dart';
 import 'attendance_screen.dart';
 
@@ -21,6 +23,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello, ${state.username}',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  state.role == UserRole.admin ? 'Administrator' : 'Staff Member',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout_rounded, color: Colors.redAccent),
+            onPressed: () => context.read<AuthCubit>().logout(),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

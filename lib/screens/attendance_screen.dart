@@ -20,7 +20,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text('Attendance', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Attendance',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -31,7 +34,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               context,
               success: true,
               message: 'Check-in Successful!',
-              details: 'You are within ${state.distance.toStringAsFixed(1)}m radius.',
+              details:
+                  'You are within ${state.distance.toStringAsFixed(1)}m radius.',
             );
           } else if (state is AttendanceFailure) {
             _showResultDialog(
@@ -51,13 +55,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               const SizedBox(height: 32),
               const Text(
                 'Select Destination',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
               ),
               const SizedBox(height: 12),
               _buildLocationSelector(),
               const Spacer(),
               _buildAttendanceButton(),
-              const SizedBox(height: 80), // Space for bottom nav
+              const SizedBox(height: 80),
             ],
           ),
         ),
@@ -70,7 +78,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.secondary,
+          ],
         ),
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
@@ -88,12 +99,19 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           const SizedBox(height: 15),
           const Text(
             'GPS Verification',
-            style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Ensure you are within 50 meters of the set location to pass verification.',
-            style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.9),
+              fontSize: 14,
+            ),
           ),
         ],
       ),
@@ -111,7 +129,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.2)),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            ),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<LocationModel>(
@@ -121,7 +141,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               items: state.locations.map((loc) {
                 return DropdownMenuItem(
                   value: loc,
-                  child: Text(loc.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  child: Text(
+                    loc.name,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                 );
               }).toList(),
               onChanged: (val) => setState(() => _selectedLocation = val),
@@ -139,12 +162,16 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         return ElevatedButton(
           onPressed: (_selectedLocation == null || isLoading)
               ? null
-              : () => context.read<AttendanceCubit>().submitAttendance(_selectedLocation!),
+              : () => context.read<AttendanceCubit>().submitAttendance(
+                  _selectedLocation!,
+                ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Theme.of(context).colorScheme.primary,
             foregroundColor: Theme.of(context).colorScheme.onPrimary,
             padding: const EdgeInsets.symmetric(vertical: 20),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             elevation: 8,
             shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
           ),
@@ -155,7 +182,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   children: [
                     Icon(Icons.fingerprint, size: 28),
                     SizedBox(width: 12),
-                    Text('Punch Attendance', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      'Punch Attendance',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
         );
@@ -163,7 +196,12 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.5, end: 0);
   }
 
-  void _showResultDialog(BuildContext context, {required bool success, required String message, required String details}) {
+  void _showResultDialog(
+    BuildContext context, {
+    required bool success,
+    required String message,
+    required String details,
+  }) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -195,8 +233,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 context.read<AttendanceCubit>().reset();
               },
               style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 12,
+                ),
               ),
               child: const Text('OK'),
             ),
