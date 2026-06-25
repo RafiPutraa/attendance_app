@@ -1,11 +1,14 @@
+import 'package:attendance_app/modules/login/presentation/cubit/auth_cubit.dart';
+import 'package:attendance_app/modules/report/data/models/log_model.dart';
+import 'package:attendance_app/modules/report/presentation/cubit/log_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/attendance_cubit.dart';
 import '../../../location/data/models/location_model.dart';
-
 import '../widgets/location_selector.dart';
 import '../widgets/attendance_button.dart';
 import '../widgets/attendance_result_dialog.dart';
+import 'package:uuid/uuid.dart';
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -23,6 +26,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       body: BlocListener<AttendanceCubit, AttendanceState>(
         listener: (context, state) {
           if (state is AttendanceSuccess) {
+            final authState = context.read<AuthCubit>().state;
+            context.read<LogCubit>().addLog(
+              LogModel(
+                id: const Uuid().v4(),
+                username: authState.username!,
+                locationName: _selectedLocation?.name ?? 'Unknown',
+                timestamp: DateTime.now(),
+                status: 'Success',
+              ),
+            );
+
             showDialog(
               context: context,
               builder: (context) => const AttendanceResultDialog(

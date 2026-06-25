@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'nav_icon.dart';
 
 class HomeBottomNav extends StatelessWidget {
-  final int selectedIndex;
-  final Function(int) onItemSelected;
+  final int currentIndex;
+  final bool isAdmin;
+  final Function(int) onTap;
 
   const HomeBottomNav({
     super.key,
-    required this.selectedIndex,
-    required this.onItemSelected,
+    required this.currentIndex,
+    required this.isAdmin,
+    required this.onTap,
   });
 
   @override
@@ -38,15 +40,22 @@ class HomeBottomNav extends StatelessWidget {
             NavIcon(
               icon: Icons.grid_view_rounded,
               selectedIcon: Icons.grid_view_rounded,
-              isSelected: selectedIndex == 0,
-              onTap: () => onItemSelected(0),
+              isSelected: currentIndex == 0,
+              onTap: () => onTap(0),
             ),
             NavIcon(
               icon: Icons.map_outlined,
               selectedIcon: Icons.map_rounded,
-              isSelected: selectedIndex == 1,
-              onTap: () => onItemSelected(1),
+              isSelected: currentIndex == 1,
+              onTap: () => onTap(1),
             ),
+            if (isAdmin)
+              NavIcon(
+                icon: Icons.bar_chart_outlined,
+                selectedIcon: Icons.bar_chart_rounded,
+                isSelected: currentIndex == 2,
+                onTap: () => onTap(2),
+              ),
           ],
         ),
       ),

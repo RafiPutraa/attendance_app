@@ -10,12 +10,15 @@ import 'modules/home/presentation/screen/home_screen.dart';
 
 import 'modules/login/presentation/cubit/auth_cubit.dart';
 import 'modules/login/presentation/screen/login_screen.dart';
+import 'modules/report/data/models/log_model.dart';
+import 'modules/report/presentation/cubit/log_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
   Hive.registerAdapter(LocationModelAdapter());
+  Hive.registerAdapter(LogModelAdapter());
 
   runApp(const AttendanceApp());
 }
@@ -30,6 +33,7 @@ class AttendanceApp extends StatelessWidget {
         BlocProvider(create: (context) => AuthCubit()),
         BlocProvider(create: (context) => LocationCubit()..init()),
         BlocProvider(create: (context) => AttendanceCubit(LocationService())),
+        BlocProvider(create: (context) => LogCubit()..init()),
       ],
       child: MaterialApp(
         title: 'AttendanceApp',
