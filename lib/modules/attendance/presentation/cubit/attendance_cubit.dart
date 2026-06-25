@@ -1,23 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../services/location_service.dart';
-import '../models/location_model.dart';
+import '../../../../services/location_service.dart';
+import '../../../location/data/models/location_model.dart';
 
-abstract class AttendanceState {}
-
-class AttendanceInitial extends AttendanceState {}
-
-class AttendanceLoading extends AttendanceState {}
-
-class AttendanceSuccess extends AttendanceState {
-  final double distance;
-  AttendanceSuccess(this.distance);
-}
-
-class AttendanceFailure extends AttendanceState {
-  final String message;
-  final double? distance;
-  AttendanceFailure(this.message, {this.distance});
-}
+part 'attendance_state.dart';
 
 class AttendanceCubit extends Cubit<AttendanceState> {
   final LocationService _locationService;

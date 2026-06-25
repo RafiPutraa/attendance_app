@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'models/location_model.dart';
-import 'blocs/master_location_cubit.dart';
-import 'blocs/attendance_cubit.dart';
+import 'modules/location/data/models/location_model.dart';
+import 'modules/location/presentation/cubit/master_location_cubit.dart';
+import 'modules/attendance/presentation/cubit/attendance_cubit.dart';
 import 'services/location_service.dart';
-import 'screens/home_screen.dart';
+import 'modules/home/presentation/screen/home_screen.dart';
 
-import 'blocs/auth_cubit.dart';
-import 'screens/login_screen.dart';
+import 'modules/login/presentation/cubit/auth_cubit.dart';
+import 'modules/login/presentation/screen/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Hive.initFlutter();
   Hive.registerAdapter(LocationModelAdapter());
-  
+
   runApp(const AttendanceApp());
 }
 
@@ -32,7 +32,7 @@ class AttendanceApp extends StatelessWidget {
         BlocProvider(create: (context) => AttendanceCubit(LocationService())),
       ],
       child: MaterialApp(
-        title: 'GeoAttendance',
+        title: 'AttendanceApp',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
@@ -46,14 +46,13 @@ class AttendanceApp extends StatelessWidget {
           ),
           textTheme: GoogleFonts.plusJakartaSansTextTheme(
             Theme.of(context).textTheme,
-          ).apply(
-            bodyColor: Colors.white,
-            displayColor: Colors.white,
-          ),
+          ).apply(bodyColor: Colors.white, displayColor: Colors.white),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ),

@@ -7,7 +7,7 @@ class MapPickerScreen extends StatefulWidget {
 
   const MapPickerScreen({
     super.key,
-    this.initialCenter = const LatLng(-6.2000, 106.8166),
+    required this.initialCenter,
   });
 
   @override
