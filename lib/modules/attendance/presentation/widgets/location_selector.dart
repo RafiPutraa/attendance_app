@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../location/data/models/location_model.dart';
-import '../../../location/presentation/cubit/master_location_cubit.dart';
+import '../../../location/presentation/cubit/location_cubit.dart';
 
 class LocationSelector extends StatelessWidget {
   final LocationModel? selectedLocation;
@@ -17,7 +17,7 @@ class LocationSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return BlocBuilder<MasterLocationCubit, MasterLocationState>(
+    return BlocBuilder<LocationCubit, LocationState>(
       builder: (context, state) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

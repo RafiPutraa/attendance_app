@@ -4,7 +4,7 @@ import '../cubit/attendance_cubit.dart';
 import '../../../location/data/models/location_model.dart';
 
 import '../widgets/location_selector.dart';
-import '../widgets/punch_button.dart';
+import '../widgets/attendance_button.dart';
 import '../widgets/attendance_result_dialog.dart';
 
 class AttendanceScreen extends StatefulWidget {
@@ -67,11 +67,11 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               ),
               const Spacer(),
               Center(
-                child: PunchButton(
+                child: AttendanceButton(
                   selectedLocation: _selectedLocation,
-                  onPunch: () => context
-                      .read<AttendanceCubit>()
-                      .submitAttendance(_selectedLocation!),
+                  onTap: () => context.read<AttendanceCubit>().submitAttendance(
+                    _selectedLocation!,
+                  ),
                 ),
               ),
               const Spacer(),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../location/presentation/screen/master_location_screen.dart';
+import '../../../location/presentation/screen/work_location_screen.dart';
 import '../../../attendance/presentation/screen/attendance_screen.dart';
 
 import '../widgets/home_app_bar.dart';
@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> _screens = [
     const AttendanceScreen(),
-    const MasterLocationScreen(),
+    const WorkLocationScreen(),
   ];
 
   @override

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/master_location_cubit.dart';
+import '../cubit/location_cubit.dart';
 import '../../../login/presentation/cubit/auth_cubit.dart';
 
 import '../widgets/add_location_bottom_sheet.dart';
 import '../widgets/location_list_item.dart';
 
-class MasterLocationScreen extends StatelessWidget {
-  const MasterLocationScreen({super.key});
+class WorkLocationScreen extends StatelessWidget {
+  const WorkLocationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class MasterLocationScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text(
-          'Locations',
+          'Work Locations',
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         actions: [
@@ -39,7 +39,7 @@ class MasterLocationScreen extends StatelessWidget {
           const SizedBox(width: 12),
         ],
       ),
-      body: BlocBuilder<MasterLocationCubit, MasterLocationState>(
+      body: BlocBuilder<LocationCubit, LocationState>(
         builder: (context, state) {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());

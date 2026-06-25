@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'modules/location/data/models/location_model.dart';
-import 'modules/location/presentation/cubit/master_location_cubit.dart';
+import 'modules/location/presentation/cubit/location_cubit.dart';
 import 'modules/attendance/presentation/cubit/attendance_cubit.dart';
 import 'services/location_service.dart';
 import 'modules/home/presentation/screen/home_screen.dart';
@@ -28,7 +28,7 @@ class AttendanceApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => AuthCubit()),
-        BlocProvider(create: (context) => MasterLocationCubit()..init()),
+        BlocProvider(create: (context) => LocationCubit()..init()),
         BlocProvider(create: (context) => AttendanceCubit(LocationService())),
       ],
       child: MaterialApp(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:latlong2/latlong.dart';
-import '../cubit/master_location_cubit.dart';
+import '../cubit/location_cubit.dart';
 import '../../data/models/location_model.dart';
 import '../../../../services/location_service.dart';
 import '../screen/map_picker_screen.dart';
@@ -17,6 +17,7 @@ class AddLocationBottomSheet extends StatefulWidget {
 
 class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
   final _nameController = TextEditingController();
+  final _addressController = TextEditingController();
   LocationModel? _tempLocation;
   bool _isGettingCurrent = false;
   bool _isGettingMap = false;
@@ -24,6 +25,7 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
   @override
   void dispose() {
     _nameController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -54,6 +56,21 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
             style: const TextStyle(fontWeight: FontWeight.bold),
             decoration: InputDecoration(
               hintText: 'Location Name',
+              filled: true,
+              fillColor: Theme.of(context).colorScheme.surface,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            onChanged: (val) => setState(() {}),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _addressController,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+              hintText: 'Full Address',
               filled: true,
               fillColor: Theme.of(context).colorScheme.surface,
               border: OutlineInputBorder(
@@ -108,7 +125,7 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
                           name: _nameController.text,
                           latitude: pos.latitude,
                           longitude: pos.longitude,
-                          address: '',
+                          address: _addressController.text,
                         );
                         _isGettingCurrent = false;
                       });
@@ -127,7 +144,7 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
                     try {
                       final pos = await LocationService().getCurrentLocation();
                       setState(() => _isGettingMap = false);
-                      
+
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -143,7 +160,7 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
                             name: _nameController.text,
                             latitude: result.latitude,
                             longitude: result.longitude,
-                            address: '',
+                            address: _addressController.text,
                           );
                         });
                       }
@@ -159,18 +176,21 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
             width: double.infinity,
             height: 60,
             child: ElevatedButton(
-              onPressed: (_tempLocation == null || _nameController.text.isEmpty)
+              onPressed:
+                  (_tempLocation == null ||
+                      _nameController.text.isEmpty ||
+                      _addressController.text.isEmpty)
                   ? null
                   : () {
-                      context.read<MasterLocationCubit>().addLocation(
-                            LocationModel(
-                              id: _tempLocation!.id,
-                              name: _nameController.text,
-                              latitude: _tempLocation!.latitude,
-                              longitude: _tempLocation!.longitude,
-                              address: '',
-                            ),
-                          );
+                      context.read<LocationCubit>().addLocation(
+                        LocationModel(
+                          id: _tempLocation!.id,
+                          name: _nameController.text,
+                          latitude: _tempLocation!.latitude,
+                          longitude: _tempLocation!.longitude,
+                          address: _addressController.text,
+                        ),
+                      );
                       Navigator.pop(context);
                     },
               style: ElevatedButton.styleFrom(

@@ -2,12 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../data/models/location_model.dart';
 
-part 'master_location_state.dart';
+part 'location_state.dart';
 
-class MasterLocationCubit extends Cubit<MasterLocationState> {
+class LocationCubit extends Cubit<LocationState> {
   static const String boxName = 'locations_box';
 
-  MasterLocationCubit() : super(MasterLocationState());
+  LocationCubit() : super(LocationState());
 
   Future<void> init() async {
     emit(state.copyWith(isLoading: true));

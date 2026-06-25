@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/models/location_model.dart';
 import '../../../login/presentation/cubit/auth_cubit.dart';
-import '../cubit/master_location_cubit.dart';
+import '../cubit/location_cubit.dart';
 import 'delete_location_dialog.dart';
 
 class LocationListItem extends StatelessWidget {
@@ -56,11 +56,10 @@ class LocationListItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${location.latitude.toStringAsFixed(3)}, ${location.longitude.toStringAsFixed(3)}',
-                  style: const TextStyle(
-                    color: Colors.white24,
-                    fontSize: 12,
-                  ),
+                  location.address,
+                  style: const TextStyle(color: Colors.white24, fontSize: 13),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -77,7 +76,7 @@ class LocationListItem extends StatelessWidget {
                   context: context,
                   builder: (context) => DeleteLocationDialog(
                     onDelete: () => context
-                        .read<MasterLocationCubit>()
+                        .read<LocationCubit>()
                         .deleteLocation(location.id),
                   ),
                 );
