@@ -30,12 +30,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       body: BlocListener<AttendanceCubit, AttendanceState>(
         listener: (context, state) {
           if (state is AttendanceSuccess) {
+            String distText = state.distance < 1 
+                ? '${(state.distance * 100).toStringAsFixed(0)} cm' 
+                : '${state.distance.toStringAsFixed(1)} meters';
             _showResultDialog(
               context,
               success: true,
               message: 'Check-in Successful!',
-              details:
-                  'You are within ${state.distance.toStringAsFixed(1)}m radius.',
+              details: 'You are within the safe radius ($distText from target).',
             );
           } else if (state is AttendanceFailure) {
             _showResultDialog(

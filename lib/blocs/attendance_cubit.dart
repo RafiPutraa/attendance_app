@@ -38,8 +38,12 @@ class AttendanceCubit extends Cubit<AttendanceState> {
       if (distance <= 50) {
         emit(AttendanceSuccess(distance));
       } else {
+        String displayDist = distance >= 1000 
+            ? '${(distance / 1000).toStringAsFixed(2)} km' 
+            : '${distance.toStringAsFixed(1)} meters';
+            
         emit(AttendanceFailure(
-          'Distance too far: ${distance.toStringAsFixed(1)}m. Max radius is 50m.',
+          'You are outside the required radius. Current distance: $displayDist (Max allowance: 50 meters).',
           distance: distance,
         ));
       }

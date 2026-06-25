@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:uuid/uuid.dart';
+import 'package:latlong2/latlong.dart';
 import '../blocs/master_location_cubit.dart';
 import '../blocs/auth_cubit.dart';
 import '../models/location_model.dart';
 import '../services/location_service.dart';
+import 'map_picker_screen.dart';
 
 class MasterLocationScreen extends StatelessWidget {
   const MasterLocationScreen({super.key});
@@ -69,57 +71,100 @@ class MasterLocationScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'Geotagged: ${tempLocation!.latitude.toStringAsFixed(5)}, ${tempLocation!.longitude.toStringAsFixed(5)}',
+                          'Selected: ${tempLocation!.latitude.toStringAsFixed(5)}, ${tempLocation!.longitude.toStringAsFixed(5)}',
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, size: 20),
+                        onPressed: () =>
+                            setModalState(() => tempLocation = null),
                       ),
                     ],
                   ),
                 )
               else
-                ElevatedButton.icon(
-                  onPressed: isGettingLocation
-                      ? null
-                      : () async {
-                          setModalState(() => isGettingLocation = true);
-                          try {
-                            final pos = await LocationService()
-                                .getCurrentLocation();
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: isGettingLocation
+                            ? null
+                            : () async {
+                                setModalState(() => isGettingLocation = true);
+                                try {
+                                  final pos = await LocationService()
+                                      .getCurrentLocation();
+                                  setModalState(() {
+                                    tempLocation = LocationModel(
+                                      id: const Uuid().v4(),
+                                      name: '',
+                                      latitude: pos.latitude,
+                                      longitude: pos.longitude,
+                                      address: 'Custom Location',
+                                    );
+                                    isGettingLocation = false;
+                                  });
+                                } catch (e) {
+                                  setModalState(
+                                    () => isGettingLocation = false,
+                                  );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())),
+                                  );
+                                }
+                              },
+                        icon: isGettingLocation
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.my_location),
+                        label: const Text('Current Location'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          final LatLng? result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MapPickerScreen(),
+                            ),
+                          );
+                          if (result != null) {
                             setModalState(() {
                               tempLocation = LocationModel(
                                 id: const Uuid().v4(),
                                 name: '',
-                                latitude: pos.latitude,
-                                longitude: pos.longitude,
-                                address: 'Custom Location',
+                                latitude: result.latitude,
+                                longitude: result.longitude,
+                                address: 'Map Picked',
                               );
-                              isGettingLocation = false;
                             });
-                          } catch (e) {
-                            setModalState(() => isGettingLocation = false);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
                           }
                         },
-                  icon: isGettingLocation
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.my_location),
-                  label: Text(
-                    isGettingLocation
-                        ? 'Fetching GPS...'
-                        : 'Geotag Current Location',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                        icon: const Icon(Icons.map_outlined),
+                        label: const Text('Map'),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -163,7 +208,10 @@ class MasterLocationScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text('Location Master', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Location Master',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -259,8 +307,13 @@ class MasterLocationScreen extends StatelessWidget {
                     builder: (context, authState) {
                       if (authState.role == UserRole.admin) {
                         return IconButton(
-                          icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                          onPressed: () => context.read<MasterLocationCubit>().deleteLocation(loc.id),
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.redAccent,
+                          ),
+                          onPressed: () => context
+                              .read<MasterLocationCubit>()
+                              .deleteLocation(loc.id),
                         );
                       }
                       return const SizedBox.shrink();
