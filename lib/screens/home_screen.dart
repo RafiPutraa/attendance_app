@@ -33,14 +33,18 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'Hello, ${state.username}',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 Text(
                   state.role == UserRole.admin ? 'Administrator' : 'Staff Member',
                   style: TextStyle(
                     fontSize: 12,
                     color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -93,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             selectedItemColor: Theme.of(context).colorScheme.primary,
-            unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             showSelectedLabels: true,
             showUnselectedLabels: false,
             items: const [

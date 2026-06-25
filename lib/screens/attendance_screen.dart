@@ -30,14 +30,11 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       body: BlocListener<AttendanceCubit, AttendanceState>(
         listener: (context, state) {
           if (state is AttendanceSuccess) {
-            String distText = state.distance < 1 
-                ? '${(state.distance * 100).toStringAsFixed(0)} cm' 
-                : '${state.distance.toStringAsFixed(1)} meters';
             _showResultDialog(
               context,
               success: true,
               message: 'Check-in Successful!',
-              details: 'You are within the safe radius ($distText from target).',
+              details: 'Your attendance has been recorded successfully.',
             );
           } else if (state is AttendanceFailure) {
             _showResultDialog(
@@ -60,7 +57,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey,
+                  color: Colors.white70,
                 ),
               ),
               const SizedBox(height: 12),
@@ -138,14 +135,21 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton<LocationModel>(
               isExpanded: true,
-              hint: const Text('Choose a location'),
+              hint: const Text(
+                'Choose a location',
+                style: TextStyle(color: Colors.white60),
+              ),
               value: _selectedLocation,
+              dropdownColor: Theme.of(context).colorScheme.surface,
               items: state.locations.map((loc) {
                 return DropdownMenuItem(
                   value: loc,
                   child: Text(
                     loc.name,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
                   ),
                 );
               }).toList(),
@@ -219,13 +223,17 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             const SizedBox(height: 20),
             Text(
               message,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               details,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+              style: const TextStyle(fontSize: 16, color: Colors.white70),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),

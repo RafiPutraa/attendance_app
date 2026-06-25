@@ -84,24 +84,40 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 24),
                         TextField(
                           controller: _usernameController,
+                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             labelText: 'Username',
-                            prefixIcon: const Icon(Icons.person_outline),
-                            border: OutlineInputBorder(
+                            labelStyle: const TextStyle(color: Colors.white70),
+                            prefixIcon: const Icon(Icons.person_outline, color: Colors.white70),
+                            enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(color: Colors.white24),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                           ),
                         ),
                         const SizedBox(height: 16),
                         TextField(
                           controller: _passwordController,
                           obscureText: true,
+                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon: const Icon(Icons.lock_outline),
-                            border: OutlineInputBorder(
+                            labelStyle: const TextStyle(color: Colors.white70),
+                            prefixIcon: const Icon(Icons.lock_outline, color: Colors.white70),
+                            enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(color: Colors.white24),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: colorScheme.primary, width: 2),
+                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                           ),
                         ),
                         const SizedBox(height: 24),

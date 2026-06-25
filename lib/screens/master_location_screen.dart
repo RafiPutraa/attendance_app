@@ -38,18 +38,35 @@ class MasterLocationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Add Master Location',
+                'Add Location',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: nameController,
+                style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Location Name',
-                  prefixIcon: const Icon(Icons.business_outlined),
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  prefixIcon: const Icon(
+                    Icons.business_outlined,
+                    color: Colors.white70,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(color: Colors.white24),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -248,7 +265,7 @@ class MasterLocationScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   const Text(
                     'No locations yet.',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    style: TextStyle(fontSize: 18, color: Colors.white70),
                   ),
                   const SizedBox(height: 8),
                   TextButton(
@@ -300,7 +317,7 @@ class MasterLocationScreen extends StatelessWidget {
                     style: TextStyle(
                       color: Theme.of(
                         context,
-                      ).colorScheme.onSurface.withOpacity(0.6),
+                      ).colorScheme.onSurface.withOpacity(0.7),
                     ),
                   ),
                   trailing: BlocBuilder<AuthCubit, AuthState>(
