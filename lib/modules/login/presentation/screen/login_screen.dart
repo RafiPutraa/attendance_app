@@ -74,13 +74,16 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Center(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40.0,
+                  vertical: 20.0,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Welcome\nBack.',
+                      'Ready to\nWork.',
                       style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.w900,
@@ -110,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -129,8 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             size: 20,
                             color: Colors.white24,
                           ),
-                          onPressed: () =>
-                              setState(() => _obscurePassword = !_obscurePassword),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                         filled: true,
                         fillColor: colorScheme.surface.withOpacity(0.5),
@@ -138,7 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 20),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 32),

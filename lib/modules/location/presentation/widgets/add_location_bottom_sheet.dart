@@ -9,7 +9,9 @@ import '../screen/map_picker_screen.dart';
 import 'small_action_btn.dart';
 
 class AddLocationBottomSheet extends StatefulWidget {
-  const AddLocationBottomSheet({super.key});
+  final LocationModel? initialLocation;
+
+  const AddLocationBottomSheet({super.key, this.initialLocation});
 
   @override
   State<AddLocationBottomSheet> createState() => _AddLocationBottomSheetState();
@@ -21,6 +23,16 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
   LocationModel? _tempLocation;
   bool _isGettingCurrent = false;
   bool _isGettingMap = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialLocation != null) {
+      _nameController.text = widget.initialLocation!.name;
+      _addressController.text = widget.initialLocation!.address;
+      _tempLocation = widget.initialLocation;
+    }
+  }
 
   @override
   void dispose() {
@@ -46,9 +58,9 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'New Location',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+          Text(
+            widget.initialLocation == null ? 'New Location' : 'Edit Location',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
           ),
           const SizedBox(height: 32),
           TextField(
@@ -102,7 +114,7 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.refresh, size: 18),
+                    icon: const Icon(Icons.close_rounded, size: 18),
                     onPressed: () => setState(() => _tempLocation = null),
                   ),
                 ],
@@ -197,9 +209,11 @@ class _AddLocationBottomSheetState extends State<AddLocationBottomSheet> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 foregroundColor: Colors.white,
               ),
-              child: const Text(
-                'SAVE LOCATION',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: Text(
+                widget.initialLocation == null
+                    ? 'SAVE LOCATION'
+                    : 'UPDATE LOCATION',
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),

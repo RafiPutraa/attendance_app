@@ -1,3 +1,4 @@
+import 'package:attendance_app/modules/location/presentation/widgets/add_location_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,7 +65,23 @@ class LocationListItem extends StatelessWidget {
               ],
             ),
           ),
-          if (isAdmin)
+          if (isAdmin) ...[
+            IconButton(
+              icon: const Icon(
+                Icons.edit_outlined,
+                color: Colors.white24,
+                size: 20,
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  backgroundColor: Colors.transparent,
+                  builder: (context) =>
+                      AddLocationBottomSheet(initialLocation: location),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(
                 Icons.remove_circle_outline,
@@ -82,6 +99,7 @@ class LocationListItem extends StatelessWidget {
                 );
               },
             ),
+          ],
         ],
       ),
     ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.1);
