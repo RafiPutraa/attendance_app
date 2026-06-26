@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../location/presentation/screen/work_location_screen.dart';
+import '../../../location/presentation/screens/work_location_screen.dart';
 import '../../../attendance/presentation/screen/attendance_screen.dart';
 import '../../../report/presentation/screen/admin_report_screen.dart';
 import '../../../login/presentation/cubit/auth_cubit.dart';

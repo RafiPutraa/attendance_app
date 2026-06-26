@@ -123,11 +123,9 @@ class LogDetailBottomSheet extends StatelessWidget {
             icon: Icons.verified_user_rounded,
             title: 'Status',
             value: log.status.toUpperCase(),
-            valueColor:
-                (log.status.toLowerCase() == 'success' ||
-                    log.status.toLowerCase() == 'check in')
+            valueColor: (log.status.toLowerCase() == 'on time')
                 ? Colors.greenAccent
-                : Colors.white,
+                : Colors.redAccent,
           ),
           const SizedBox(height: 48),
           SizedBox(

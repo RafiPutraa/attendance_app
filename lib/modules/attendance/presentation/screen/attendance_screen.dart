@@ -28,15 +28,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         listener: (context, state) {
           if (state is AttendanceSuccess) {
             final authState = context.read<AuthCubit>().state;
+            final now = DateTime.now();
+            final status = now.hour < 9 ? 'On Time' : 'Late';
+
             context.read<LogCubit>().addLog(
-                  LogModel(
-                    id: const Uuid().v4(),
-                    username: authState.username!,
-                    locationName: _selectedLocation?.name ?? 'Unknown',
-                    timestamp: DateTime.now(),
-                    status: 'Success',
-                  ),
-                );
+              LogModel(
+                id: const Uuid().v4(),
+                username: authState.username!,
+                locationName: _selectedLocation?.name ?? 'Unknown',
+                timestamp: now,
+                status: status,
+              ),
+            );
 
             showDialog(
               context: context,
