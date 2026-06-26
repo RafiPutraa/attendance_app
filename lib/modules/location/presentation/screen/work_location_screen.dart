@@ -44,24 +44,82 @@ class WorkLocationScreen extends StatelessWidget {
           if (state.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (state.locations.isEmpty) {
-            return const Center(
-              child: Text(
-                'No saved locations.',
-                style: TextStyle(color: Colors.white24),
-              ),
-            );
-          }
 
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            itemCount: state.locations.length,
-            itemBuilder: (context, index) {
-              return LocationListItem(
-                location: state.locations[index],
-                index: index,
-              );
-            },
+          final locations = state.filteredLocations;
+
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                child: Container(
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.05),
+                    ),
+                  ),
+                  child: TextField(
+                    onChanged: (value) =>
+                        context.read<LocationCubit>().setSearchQuery(value),
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Search office location...',
+                      hintStyle: TextStyle(
+                        color: Colors.white.withOpacity(0.35),
+                        fontSize: 14,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search_rounded,
+                        color: Colors.white.withOpacity(0.35),
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: locations.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.location_off_outlined,
+                              size: 48,
+                              color: Colors.white.withOpacity(0.1),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              state.searchQuery.isEmpty
+                                  ? 'No saved locations.'
+                                  : 'No matches found.',
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.24),
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 0),
+                        itemCount: locations.length,
+                        itemBuilder: (context, index) {
+                          return LocationListItem(
+                            location: locations[index],
+                            index: index,
+                          );
+                        },
+                      ),
+              ),
+            ],
           );
         },
       ),

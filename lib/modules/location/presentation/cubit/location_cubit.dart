@@ -38,4 +38,8 @@ class LocationCubit extends Cubit<LocationState> {
       emit(state.copyWith(error: e.toString()));
     }
   }
+
+  void setSearchQuery(String query) {
+    emit(state.copyWith(searchQuery: query));
+  }
 }
