@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../services/location_service.dart';
+import '../../../../core/services/location_service.dart';
 import '../../../location/data/models/location_model.dart';
 
 part 'attendance_state.dart';

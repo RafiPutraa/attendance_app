@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:latlong2/latlong.dart';
 import '../cubit/location_cubit.dart';
 import '../../data/models/location_model.dart';
-import '../../../../services/location_service.dart';
+import '../../../../core/services/location_service.dart';
 import '../screens/map_picker_screen.dart';
 import 'small_action_btn.dart';
 

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'modules/location/data/models/location_model.dart';
 import 'modules/location/presentation/cubit/location_cubit.dart';
 import 'modules/attendance/presentation/cubit/attendance_cubit.dart';
-import 'services/location_service.dart';
+import 'core/services/location_service.dart';
 import 'modules/home/presentation/screen/home_screen.dart';
 import 'modules/login/presentation/cubit/auth_cubit.dart';
 import 'modules/login/presentation/screen/login_screen.dart';
