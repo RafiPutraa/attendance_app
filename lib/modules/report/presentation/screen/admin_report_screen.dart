@@ -21,26 +21,31 @@ class AdminReportScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: TextButton(
-              onPressed: () => _confirmClear(context),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.redAccent.withOpacity(0.08),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          BlocBuilder<LogCubit, LogState>(
+            builder: (context, state) {
+              if (state.logs.isEmpty) return const SizedBox.shrink();
+              return Container(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: TextButton(
+                  onPressed: () => _confirmClear(context),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.redAccent.withOpacity(0.08),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Clear All',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
                 ),
-              ),
-              child: const Text(
-                'Clear All',
-                style: TextStyle(
-                  color: Colors.redAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-            ),
+              );
+            },
           ),
           const SizedBox(width: 24),
         ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/location_cubit.dart';
 import '../../../login/presentation/cubit/auth_cubit.dart';
-
 import '../widgets/add_location_bottom_sheet.dart';
 import '../widgets/location_list_item.dart';
 
@@ -56,16 +55,14 @@ class WorkLocationScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.05),
-                    ),
+                    border: Border.all(color: Colors.white.withOpacity(0.05)),
                   ),
                   child: TextField(
                     onChanged: (value) =>
                         context.read<LocationCubit>().setSearchQuery(value),
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: 'Search office location...',
+                      hintText: 'Search office or address...',
                       hintStyle: TextStyle(
                         color: Colors.white.withOpacity(0.35),
                         fontSize: 14,
@@ -109,7 +106,9 @@ class WorkLocationScreen extends StatelessWidget {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 0),
+                          horizontal: 24,
+                          vertical: 0,
+                        ),
                         itemCount: locations.length,
                         itemBuilder: (context, index) {
                           return LocationListItem(

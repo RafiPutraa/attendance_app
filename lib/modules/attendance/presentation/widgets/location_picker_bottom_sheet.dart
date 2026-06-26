@@ -14,7 +14,8 @@ class LocationPickerBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<LocationPickerBottomSheet> createState() => _LocationPickerBottomSheetState();
+  State<LocationPickerBottomSheet> createState() =>
+      _LocationPickerBottomSheetState();
 }
 
 class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
@@ -70,9 +71,7 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.04),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Colors.white.withOpacity(0.05),
-                ),
+                border: Border.all(color: Colors.white.withOpacity(0.05)),
               ),
               child: TextField(
                 onChanged: (value) => setState(() => _searchQuery = value),
@@ -103,8 +102,12 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
             child: BlocBuilder<LocationCubit, LocationState>(
               builder: (context, state) {
                 final filteredLocations = state.locations.where((loc) {
-                  final nameMatch = loc.name.toLowerCase().contains(_searchQuery.toLowerCase());
-                  final addressMatch = loc.address.toLowerCase().contains(_searchQuery.toLowerCase());
+                  final nameMatch = loc.name.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  );
+                  final addressMatch = loc.address.toLowerCase().contains(
+                    _searchQuery.toLowerCase(),
+                  );
                   return nameMatch || addressMatch;
                 }).toList();
 
@@ -127,7 +130,9 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _searchQuery.isEmpty ? 'No locations saved yet' : 'No matches found',
+                          _searchQuery.isEmpty
+                              ? 'No saved locations.'
+                              : 'No matches found',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.2),
                             fontWeight: FontWeight.w500,
@@ -139,7 +144,10 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                 }
 
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   itemCount: filteredLocations.length,
                   itemBuilder: (context, index) {
                     final loc = filteredLocations[index];
@@ -148,10 +156,14 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                     return Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       decoration: BoxDecoration(
-                        color: isSelected ? colorScheme.primary.withOpacity(0.05) : Colors.transparent,
+                        color: isSelected
+                            ? colorScheme.primary.withOpacity(0.05)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? colorScheme.primary.withOpacity(0.1) : Colors.transparent,
+                          color: isSelected
+                              ? colorScheme.primary.withOpacity(0.1)
+                              : Colors.transparent,
                         ),
                       ),
                       child: ListTile(
@@ -159,18 +171,27 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                           widget.onLocationSelected(loc);
                           Navigator.pop(context);
                         },
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 4,
+                        ),
                         leading: Container(
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: (isSelected ? colorScheme.primary : Colors.white).withOpacity(0.08),
+                            color:
+                                (isSelected
+                                        ? colorScheme.primary
+                                        : Colors.white)
+                                    .withOpacity(0.08),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Icon(
                             Icons.location_on_rounded,
                             size: 22,
-                            color: isSelected ? colorScheme.primary : Colors.white38,
+                            color: isSelected
+                                ? colorScheme.primary
+                                : Colors.white38,
                           ),
                         ),
                         title: Text(
@@ -178,7 +199,9 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
-                            color: isSelected ? colorScheme.primary : Colors.white,
+                            color: isSelected
+                                ? colorScheme.primary
+                                : Colors.white,
                           ),
                         ),
                         subtitle: Padding(
@@ -200,7 +223,11 @@ class _LocationPickerBottomSheetState extends State<LocationPickerBottomSheet> {
                                   color: colorScheme.primary,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.check, size: 12, color: Colors.black),
+                                child: const Icon(
+                                  Icons.check,
+                                  size: 12,
+                                  color: Colors.black,
+                                ),
                               )
                             : Icon(
                                 Icons.chevron_right_rounded,
