@@ -1,8 +1,10 @@
 import 'package:attendance_app/modules/report/presentation/widgets/log_detail_bottom_sheet.dart';
+import 'package:attendance_app/modules/report/presentation/widgets/log_date_header.dart';
+import 'package:attendance_app/modules/report/presentation/widgets/log_item_card.dart';
+import 'package:attendance_app/modules/report/presentation/widgets/empty_logs_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
 import '../cubit/log_cubit.dart';
 
 class AdminReportScreen extends StatelessWidget {
@@ -10,8 +12,6 @@ class AdminReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -57,208 +57,49 @@ class AdminReportScreen extends StatelessWidget {
           }
 
           if (state.logs.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.history_toggle_off_rounded,
-                    size: 64,
-                    color: Colors.white10,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'No logs recorded yet.',
-                    style: TextStyle(color: Colors.white24),
-                  ),
-                ],
-              ),
-            );
+            return const EmptyLogsPlaceholder();
           }
 
-          final Map<DateTime, List<dynamic>> groupedLogs = {};
-          final sortedLogs = List.from(state.logs)
-            ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
-
-          for (var log in sortedLogs) {
-            final date = DateTime(
-              log.timestamp.year,
-              log.timestamp.month,
-              log.timestamp.day,
-            );
-            if (!groupedLogs.containsKey(date)) {
-              groupedLogs[date] = [];
-            }
-            groupedLogs[date]!.add(log);
-          }
-
-          final sortedDates = groupedLogs.keys.toList()
-            ..sort((a, b) => b.compareTo(a));
-
-          final List<dynamic> flattenedItems = [];
-          for (var date in sortedDates) {
-            flattenedItems.add(date);
-            flattenedItems.addAll(groupedLogs[date]!);
-          }
+          final items = state.flattenedItems;
 
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            itemCount: flattenedItems.length,
+            itemCount: items.length,
             itemBuilder: (context, index) {
-              final item = flattenedItems[index];
+              final item = items[index];
 
               if (item is DateTime) {
-                final isToday = DateUtils.isSameDay(item, DateTime.now());
-                final isYesterday = DateUtils.isSameDay(
-                  item,
-                  DateTime.now().subtract(const Duration(days: 1)),
-                );
-
-                String dateText = DateFormat('EEEE, d MMMM yyyy').format(item);
-                if (isToday) dateText = 'Today';
-                if (isYesterday) dateText = 'Yesterday';
-
-                return Padding(
-                  padding: const EdgeInsets.only(top: 24, bottom: 16, left: 4),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary,
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        dateText.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.05);
+                return LogDateHeader(date: item)
+                    .animate()
+                    .fadeIn(delay: (index * 50).ms)
+                    .slideX(begin: 0.05);
               }
 
               final log = item;
 
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      builder: (bottomSheetContext) => LogDetailBottomSheet(
-                        log: log,
-                        onDelete: () async {
-                          final confirm = await _confirmDelete(
-                            context,
-                            log.username,
-                          );
+              return LogItemCard(
+                log: log,
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (bottomSheetContext) => LogDetailBottomSheet(
+                      log: log,
+                      onDelete: () async {
+                        final confirm = await _confirmDelete(
+                          context,
+                          log.username,
+                        );
 
-                          if (confirm == true && context.mounted) {
-                            context.read<LogCubit>().deleteLog(log.id);
-                            Navigator.pop(context);
-                          }
-                        },
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: colorScheme.surface.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withOpacity(0.04)),
+                        if (confirm == true && context.mounted) {
+                          context.read<LogCubit>().deleteLog(log.id);
+                          Navigator.pop(context);
+                        }
+                      },
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.06),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: Center(
-                            child: Text(
-                              log.username[0].toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                log.username,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  letterSpacing: 0.2,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    size: 13,
-                                    color: Colors.white.withOpacity(0.15),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      log.locationName,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(0.25),
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    "Clock In:",
-                                    style: TextStyle(
-                                      color: Colors.white.withOpacity(0.25),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    DateFormat('HH:mm').format(log.timestamp),
-                                    style: TextStyle(
-                                      color: colorScheme.primary.withOpacity(0.8),
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                  );
+                },
               ).animate().fadeIn(delay: (index * 40).ms).slideX(begin: 0.02);
             },
           );

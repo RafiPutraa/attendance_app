@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../cubit/auth_cubit.dart';
-
 import '../widgets/role_chip.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   UserRole _selectedRole = UserRole.user;
   bool _obscurePassword = true;
 
-  void _showPremiumSnackBar(String message, bool isError) {
+  void _showCustomSnackBar(String message, bool isError) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -181,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               _selectedRole,
                             );
                           } else {
-                            _showPremiumSnackBar(
+                            _showCustomSnackBar(
                               'Please fill in all fields',
                               true,
                             );

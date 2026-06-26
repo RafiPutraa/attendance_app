@@ -3,12 +3,13 @@ import 'package:attendance_app/modules/report/data/models/log_model.dart';
 import 'package:attendance_app/modules/report/presentation/cubit/log_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 import '../cubit/attendance_cubit.dart';
 import '../../../location/data/models/location_model.dart';
 import '../widgets/location_selector.dart';
 import '../widgets/attendance_button.dart';
+import '../widgets/attendance_header.dart';
 import '../widgets/attendance_result_dialog.dart';
-import 'package:uuid/uuid.dart';
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -28,14 +29,14 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           if (state is AttendanceSuccess) {
             final authState = context.read<AuthCubit>().state;
             context.read<LogCubit>().addLog(
-              LogModel(
-                id: const Uuid().v4(),
-                username: authState.username!,
-                locationName: _selectedLocation?.name ?? 'Unknown',
-                timestamp: DateTime.now(),
-                status: 'Success',
-              ),
-            );
+                  LogModel(
+                    id: const Uuid().v4(),
+                    username: authState.username!,
+                    locationName: _selectedLocation?.name ?? 'Unknown',
+                    timestamp: DateTime.now(),
+                    status: 'Success',
+                  ),
+                );
 
             showDialog(
               context: context,
@@ -61,20 +62,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Attendance',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1,
-                ),
-              ),
-              const Text(
-                'Please select your current work location.',
-                style: TextStyle(color: Colors.white38, fontSize: 14),
-              ),
-              const SizedBox(height: 48),
+              const AttendanceHeader(),
               LocationSelector(
                 selectedLocation: _selectedLocation,
                 onChanged: (val) => setState(() => _selectedLocation = val),
